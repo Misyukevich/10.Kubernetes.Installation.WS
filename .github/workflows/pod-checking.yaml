@@ -45,12 +45,13 @@ jobs:
       with:
         payload: |
           {
+            "text": "Kubernetes Pod Status: ${{ steps.pod-check.outputs.status }} | Cluster: ${{ secrets.CLUSTER_NAME }}",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*Kubernetes Pod Status Report*\nCluster: `${{ secrets.CLUSTER_NAME }}`\nStatus: `${{ steps.pod-check.outputs.status }}`\n${{ steps.pod-check.outputs.message }}"
+                  "text": "*Kubernetes Pod Status Report*\n• Cluster: `${{ secrets.CLUSTER_NAME }}`\n• Status: `${{ steps.pod-check.outputs.status }}`\n• Details:\n```${{ steps.pod-check.outputs.message }}```"
                 }
               }
             ]

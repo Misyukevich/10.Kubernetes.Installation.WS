@@ -39,20 +39,21 @@ jobs:
         fi
 
     - name: Send Slack Notification
-      uses: slackapi/slack-github-action@v1.24.0
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      uses: slackapi/slack-github-action@v2.0.0
       with:
+        webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+        webhook-type: incoming-webhook
         payload: |
-          {
-            "text": "Kubernetes Pod Status Report - Cluster: ${{ secrets.CLUSTER_NAME }} - Status: ${{ steps.pod-check.outputs.status }}",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": ":kubernetes: *Pod Status Report* \n*Cluster:* `${{ secrets.CLUSTER_NAME }}`\n*Status:* `${{ steps.pod-check.outputs.status }}`\n*Details:* \n```${{ steps.pod-check.outputs.message }}```"
-                }
-              }
-            ]
-          }
+          text: "*Kubernetes Pod Status Report* - Cluster: ${{ secrets.CLUSTER_NAME }} - Status: ${{ steps.pod-check.outputs.status }}"
+          blocks:
+            - type: section
+              text:
+                type: mrkdwn
+                text: |
+                  :kubernetes: *Kubernetes Pod Status Report*
+                  *Cluster:* `${{ secrets.CLUSTER_NAME }}`
+                  *Status:* `${{ steps.pod-check.outputs.status }}`
+                  *Details:*
+                  ```
+                  ${{ steps.pod-check.outputs.message }}
+                  ```
